@@ -21,14 +21,14 @@ class MovieFragment : Fragment() {
     private val movieViewModel: MovieViewModel by viewModels()
 
     private lateinit var adapter: MovieAdapter
-    private lateinit var binding: FragmentMovieBinding
+    private var binding: FragmentMovieBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         binding = FragmentMovieBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,10 +36,10 @@ class MovieFragment : Fragment() {
         movieViewModel.movie.observe(viewLifecycleOwner,{ movieList ->
             if (movieList != null) {
                 when (movieList) {
-                    is Resource.Loading -> binding.progressBar.visibility = View.VISIBLE
+                    is Resource.Loading -> binding?.progressBar?.visibility = View.VISIBLE
                     is Resource.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        binding.rvItem.adapter?.let { adapter ->
+                        binding?.progressBar?.visibility = View.GONE
+                        binding?.rvItem?.adapter?.let { adapter ->
                             when (adapter) {
                                 is MovieAdapter -> {
                                     movieList.data?.let { adapter.setData(it) }
@@ -49,13 +49,13 @@ class MovieFragment : Fragment() {
                         }
                     }
                     is Resource.Error -> {
-                        binding.progressBar.visibility = View.GONE
+                        binding?.progressBar?.visibility = View.GONE
                         Toast.makeText(context, "Check your internet connection", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         })
-        binding.progressBar.visibility = View.VISIBLE
+        binding?.progressBar?.visibility = View.VISIBLE
         showRecyclerList()
 
         adapter.onItemClick = { selectedData ->
@@ -67,7 +67,13 @@ class MovieFragment : Fragment() {
 
     private fun showRecyclerList() {
         adapter = MovieAdapter()
-        binding.rvItem.layoutManager = GridLayoutManager(activity, 2)
-        binding.rvItem.adapter = adapter
+        binding?.rvItem?.layoutManager = GridLayoutManager(activity, 2)
+        binding?.rvItem?.adapter = adapter
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding?.rvItem?.adapter = null
+        binding = null
     }
 }

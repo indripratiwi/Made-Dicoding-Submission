@@ -21,14 +21,14 @@ class TvShowFragment : Fragment() {
     private val tvShowViewModel: TvShowViewModel by viewModels()
 
     private lateinit var adapter: TvShowAdapter
-    private lateinit var binding: FragmentTvShowBinding
+    private var binding: FragmentTvShowBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         binding = FragmentTvShowBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,10 +36,10 @@ class TvShowFragment : Fragment() {
         tvShowViewModel.tvShow.observe(viewLifecycleOwner,{ tvShowList ->
             if (tvShowList != null) {
                 when (tvShowList) {
-                    is Resource.Loading -> binding.progressBar.visibility = View.VISIBLE
+                    is Resource.Loading -> binding?.progressBar?.visibility = View.VISIBLE
                     is Resource.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        binding.rvItem.adapter?.let { adapter ->
+                        binding?.progressBar?.visibility = View.GONE
+                        binding?.rvItem?.adapter?.let { adapter ->
                             when (adapter) {
                                 is TvShowAdapter -> {
                                     tvShowList.data?.let { adapter.setData(it) }
@@ -49,13 +49,13 @@ class TvShowFragment : Fragment() {
                         }
                     }
                     is Resource.Error -> {
-                        binding.progressBar.visibility = View.GONE
+                        binding?.progressBar?.visibility = View.GONE
                         Toast.makeText(context, "Check your internet connection", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         })
-        binding.progressBar.visibility = View.VISIBLE
+        binding?.progressBar?.visibility = View.VISIBLE
         showRecyclerList()
 
         adapter.onItemClick = { selectedData ->
@@ -67,7 +67,13 @@ class TvShowFragment : Fragment() {
 
     private fun showRecyclerList() {
         adapter = TvShowAdapter()
-        binding.rvItem.layoutManager = GridLayoutManager(activity, 2)
-        binding.rvItem.adapter = adapter
+        binding?.rvItem?.layoutManager = GridLayoutManager(activity, 2)
+        binding?.rvItem?.adapter = adapter
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding?.rvItem?.adapter = null
+        binding = null
     }
 }

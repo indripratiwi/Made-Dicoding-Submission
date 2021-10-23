@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Documents/Bangkit/Bangkit Indi/Movie-Catalogue/app/src/main/res/layout/fragment_favorite.xml" value="0.13072916666666667" />
         <entry key="..\:/Documents/Bangkit/Bangkit Indi/Movie-Catalogue/core/src/main/res/drawable/fading_shape.xml" value="0.2755208333333333" />
+        <entry key="..\:/Documents/Bangkit/Bangkit Indi/Movie-Catalogue/favorites/src/main/res/layout/fragment_favorite_movie.xml" value="0.264" />
         <entry key="..\:/Documents/Bangkit/Bangkit Indi/Movie-Catalogue/favorites/src/main/res/layout/fragment_favorite_tv_show.xml" value="0.17300724637681159" />
       </map>
     </option>
